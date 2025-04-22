@@ -2,6 +2,7 @@
 //
 
 #include <iostream>
+#include <functional>
 
 // 컴파일러가 추천한 프로그램을 안전하게 다루는 법
 // 컴파일 경고 수준은 최상위로
@@ -15,7 +16,6 @@ class B
 public:
 	virtual ~B()
 	{
-
 	}
 
 	virtual void f() const

@@ -221,6 +221,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "new_handler", "..\..\MyLib\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PlacedNew&Delete", "PlacedNew&Delete\PlacedNew&Delete.vcxproj", "{8B149FBC-1D3D-4B6C-AD5D-3970939AFA1C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CompilerWarning", "CompilerWarning\CompilerWarning.vcxproj", "{FC7446EB-A462-4B05-8792-DE9F14975BCA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -1037,6 +1039,14 @@ Global
 		{8B149FBC-1D3D-4B6C-AD5D-3970939AFA1C}.Release|x64.Build.0 = Release|x64
 		{8B149FBC-1D3D-4B6C-AD5D-3970939AFA1C}.Release|x86.ActiveCfg = Release|Win32
 		{8B149FBC-1D3D-4B6C-AD5D-3970939AFA1C}.Release|x86.Build.0 = Release|Win32
+		{FC7446EB-A462-4B05-8792-DE9F14975BCA}.Debug|x64.ActiveCfg = Debug|x64
+		{FC7446EB-A462-4B05-8792-DE9F14975BCA}.Debug|x64.Build.0 = Debug|x64
+		{FC7446EB-A462-4B05-8792-DE9F14975BCA}.Debug|x86.ActiveCfg = Debug|Win32
+		{FC7446EB-A462-4B05-8792-DE9F14975BCA}.Debug|x86.Build.0 = Debug|Win32
+		{FC7446EB-A462-4B05-8792-DE9F14975BCA}.Release|x64.ActiveCfg = Release|x64
+		{FC7446EB-A462-4B05-8792-DE9F14975BCA}.Release|x64.Build.0 = Release|x64
+		{FC7446EB-A462-4B05-8792-DE9F14975BCA}.Release|x86.ActiveCfg = Release|Win32
+		{FC7446EB-A462-4B05-8792-DE9F14975BCA}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1145,5 +1155,6 @@ Global
 		{19F6351A-2169-4254-A032-537436DFCC01} = {8E7593AC-2E58-428C-B714-ACBBE53B3BF0}
 		{0ACF997F-FB11-4476-8D87-EAE9D48D4894} = {8E7593AC-2E58-428C-B714-ACBBE53B3BF0}
 		{8B149FBC-1D3D-4B6C-AD5D-3970939AFA1C} = {8E7593AC-2E58-428C-B714-ACBBE53B3BF0}
+		{FC7446EB-A462-4B05-8792-DE9F14975BCA} = {8E7593AC-2E58-428C-B714-ACBBE53B3BF0}
 	EndGlobalSection
 EndGlobal

@@ -9,5 +9,8 @@
 int main()
 {
 	float4 PosA;
-    std::cout << "Hello World!\n";
+
+
+	std::cout << "Determinant Mat" << DirectX::XMMatrixDeterminant(float4x4::Identity().DirectXMatrix) << '\n';
+	std::cout << float4x4::Inverse(float4x4::Identity());
 }

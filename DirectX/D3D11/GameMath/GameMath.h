@@ -4,6 +4,7 @@
 #define __DEFINE_GAME_MATH_H
 #include <iostream>
 #include <cassert>
+#include <string>
 #include <DirectXMath.h>
 
 #define EXPERIENCE_MATH__ true
@@ -262,12 +263,124 @@ inline std::ostream& operator<<(std::ostream& _os, const float4& _Object)
 // 백터 형태에서 행렬 형태로 사용될 수 있다.
 // 행벡터, 열벡터는 이중 색인 대신 단일 색인으로 봐도 무방하다.
 
-class Matrix4x4
+// 정방행렬 표기식: detA (단, A!=0) 
+// 소행렬 표기식: (A^-)ij
+//	- 특정 행과 열을 제거한 행렬
+// 
+// 역행렬은 정방행렬에 대한 곱으로 단위행렬이 되는 행렬이다.
+// 역행렬이 존재하지 않을 경우 -> 특이행렬, 
+//			존재할 경우 -> 가역행렬
+
+class float4x4
 {
 public:
+	static constexpr int MatrixXCount = 4;
+	static constexpr int MatrixYCount = 4;
 
+public:
+	float4x4(const DirectX::XMMATRIX& _Mat = DirectX::XMMatrixIdentity())
+		: DirectXMatrix(_Mat)
+	{
+	}
 
+	float4x4(DirectX::XMMATRIX&& _Mat) noexcept
+		: DirectXMatrix(_Mat)
+	{
+	}
+
+	union
+	{
+
+		float Arr1D[MatrixXCount * MatrixYCount];
+		float Arr2D[MatrixXCount][MatrixYCount];
+
+		struct
+		{
+			float 
+				_00, _01, _02, _03,
+				_10, _11, _12, _13,
+				_20, _21, _22, _23,
+				_30, _31, _32, _33;
+		};
+
+		DirectX::XMMATRIX DirectXMatrix;
+	};
+
+	// 행렬의 전치
+	// 각 행과 열의 구성을 교환한 것
+	// 행과 열의 차원 또한 교환되어 진다.
+	// ex) 1x4 -> 4x1
+	// 표기 방식은 M^T
+	static float4x4 Transpose(const float4x4& _pMatrix)
+	{
+		return DirectX::XMMatrixTranspose(_pMatrix.DirectXMatrix);
+	}
+
+	float4x4& Transposed()
+	{
+		// 대입 비용 아깝...
+		(*this) = Transpose(*this);
+		return *this;
+	}
+
+	const float4x4 T() const
+	{
+		return Transpose(*this);
+	}
+
+	// 단위행렬 
+	// 행렬의 좌상에서 우하로 구성된 대각선으로 
+	// 이루어진 항목이 1이고 나머지가 0인 정방행렬
+	// 단위행렬에 대한 곱셈은 항등원 역할을 한다.
+	// M*1(Iden) == M
+	static float4x4 Identity()
+	{
+		return DirectX::XMMatrixIdentity();
+	}
+
+	void Identified()
+	{
+		(*this) = Identity();
+	}
+
+	static float4x4 Inverse(const float4x4& _Mat)
+	{
+		return DirectX::XMMatrixInverse(nullptr, _Mat.DirectXMatrix);
+	}
 };
+
+/* 행렬에 대한 덧셈이나, 스칼라 곱은 각 성분별로 계산되어 진다. */
+
+// 행렬에 대한 곱을 성립하기 위해서 lhs의 열과 rhs의 행의 수가 일치해야 한다.
+// 예를 들어, A가 1x4인 행렬과 B가 4x3인 행렬일 경우, 
+// A*B의 결과 값은 A의 i번째 행벡터 B의 j번째 열벡터의 내적이된다.
+// 이로부터 만들어진 C행렬은 Cij가 된다.
+// 
+// 덧셈은 교환법칙이 성립되지만, 곱셈은 성립되지 않는다.
+inline const float4x4 operator*(const float4x4& _lhs, const float4x4& _rhs)
+{
+	const float4x4 Result{ DirectX::XMMatrixMultiply(_lhs.DirectXMatrix, _rhs.DirectXMatrix) };
+	return Result;
+}
+
+inline std::ostream& operator<<(std::ostream& _os, const float4x4& _Mat)
+{
+	static std::string Str;
+	Str.clear();
+
+	for (int i = 0; i < 16; i++)
+	{
+		Str += std::to_string(_Mat.Arr1D[i]);
+		Str += ", ";
+
+		if (i % 4 == 3)
+		{
+			Str += '\n';
+		}
+	}
+	_os << Str;
+	return _os;
+}
 
 #endif // !__DEFINE_GAME_MATH_H
 

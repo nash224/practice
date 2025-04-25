@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ThirdParty">
+      <UniqueIdentifier>{eea963c1-f43b-43bf-925b-1788003596a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\inc">
+      <UniqueIdentifier>{fb0930e1-cf42-44a4-ac07-72bb39960a80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\lib">
+      <UniqueIdentifier>{ebb05c25-cbd0-4ac7-874e-de0797bb6d67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\lib\debug">
+      <UniqueIdentifier>{57e14f3d-43d0-4983-a22f-248e9a19d862}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\lib\release">
+      <UniqueIdentifier>{75df6c58-287a-40f0-b2a1-faae5efe75f6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingProject.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\inc\DirectXTex.h">
+      <Filter>ThirdParty\inc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="RenderingProject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RenderingProject.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="RenderingProject.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ThirdParty\inc\DirectXTex.inl">
+      <Filter>ThirdParty\inc</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="ThirdParty\lib\debug\DirectXTex.lib">
+      <Filter>ThirdParty\lib\debug</Filter>
+    </Library>
+    <Library Include="ThirdParty\lib\release\DirectXTex.lib">
+      <Filter>ThirdParty\lib\release</Filter>
+    </Library>
+    <Library Include="ThirdParty\lib\debug\DirectXTex.pdb">
+      <Filter>ThirdParty\lib\debug</Filter>
+    </Library>
+    <Library Include="ThirdParty\lib\release\DirectXTex.pdb">
+      <Filter>ThirdParty\lib\release</Filter>
+    </Library>
+  </ItemGroup>
+</Project>

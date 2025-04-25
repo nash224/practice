@@ -22,3 +22,7 @@ const float4 float4::RIGHT = float4{1.0f, 0.0f, 0.0f};
 const float4 float4::UP    = float4{0.0f, 1.0f, 0.0f};
 const float4 float4::FRONT = float4{0.0f, 0.0f, 1.0f};
 const float4 float4::BACK = float4{0.0f, 0.0f, -1.0f};
+
+const float4 float4::ZERO_POINT = float4{ 0.0f, 0.0f, 0.0f, 1.0f};
+const float4 float4::ZERO = float4{ 0.0f, 0.0f, 0.0f, 0.0f};
+const float4 float4::ONE = float4{ 1.0f, 1.0f, 1.0f, 1.0f};

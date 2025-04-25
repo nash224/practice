@@ -13,6 +13,7 @@
 
 #endif // EXPERIENCE_MATH__
 
+struct float4x4;
 
 struct GameEngineMath
 {
@@ -43,6 +44,10 @@ public:
 	static const float4 UP;
 	static const float4 FRONT;
 	static const float4 BACK;
+
+	static const float4 ZERO_POINT;
+	static const float4 ZERO;
+	static const float4 ONE;
 
 public:
 	float4(float _X = 0.0f, float _Y = 0.0f, float _Z = 0.0f, float _W = 1.0f)
@@ -271,7 +276,41 @@ inline std::ostream& operator<<(std::ostream& _os, const float4& _Object)
 // 역행렬이 존재하지 않을 경우 -> 특이행렬, 
 //			존재할 경우 -> 가역행렬
 
-class float4x4
+// 선형결합 
+// 벡터에 어느 행렬을 곱하여 비례하는 경우, 결합법칙 성립
+// 벡터의 크기는 비례 선형결합을 통해 조절할 수 있음
+// 이를 비례행렬이라고 함
+// 
+// 회전 변환
+// v선을 n 축에 대해 세타만큼 회전하는 것
+// 최종 변환행렬을 각 축벡터로 분할하고 
+// 축벡터 x,y,z를 다시 회전 행렬로 변환된 결과물을 회전변환으로 사용한다.
+// 
+
+// 아핀변환
+// 벡터의 근본을 바꾸는 것이 아닌 점을 이동하는 행렬이 되어야 함
+// 점은 기본적으로 4차원 w를 포함하고 w의 값은 항상 1이되어야 함
+// 벡터는 w 값을 포함하고 있지 않음
+// 이동변환을 위해 w=1인 동차좌표가 반영된 행렬로 점을 이동하게 됨
+// 이동이 포함된 변환을 아핀변환이라고 함
+//	[	A11	A12	A13	0	]
+//	[	A21	A22	A23	0	]
+//	[	A31	A32	A33	0	]
+//	[	bx	by	bz	1	]
+
+// 변환들의 합성
+// 벡터의 변환은 크기, 회전, 이동 변환 순서대로 적용한다.
+// 각각 변환을 한꺼번에 적용하기 위해 
+// SRT변환을 하나로 행렬로 변환한다.
+
+// 기준이되는 좌표계의 변환
+// 좌표계의 변환에서 벡터에 대한 좌표 변환과 점에 대한 좌표 변환은 다르다.
+
+// A좌표계에서 B좌표계의 변환을 A에 대한 좌표 변환 행렬 M
+// 그의 역이라면 B에 대한 M의 역행렬
+// 
+
+struct float4x4
 {
 public:
 	static constexpr int MatrixXCount = 4;
@@ -347,6 +386,69 @@ public:
 	{
 		return DirectX::XMMatrixInverse(nullptr, _Mat.DirectXMatrix);
 	}
+
+	// 비례행렬 생성
+	static float4x4 MatrixScale(float _ScaleX = 1.0f, float _ScaleY = 1.0f, float _ScaleZ = 1.0f)
+	{
+		return DirectX::XMMatrixScaling(_ScaleX, _ScaleY, _ScaleZ);
+	}
+
+	// 비례행렬 생성
+	static float4x4 MatrixScale(const float4& _v = float4::ZERO)
+	{
+		return DirectX::XMMatrixScalingFromVector(_v.DirectXVector);
+	}
+
+	// x축으로 Angle만큼 회전행렬 생성
+	static float4x4 MatrixRotationX(float _Angle)
+	{
+		return DirectX::XMMatrixRotationX(_Angle);
+	}
+
+	// Y축으로 Angle만큼 회전행렬 생성
+	static float4x4 MatrixRotationY(float _Angle)
+	{
+		return DirectX::XMMatrixRotationX(_Angle);
+	}
+
+	// Z축으로 Angle만큼 회전 행렬 생성
+	static float4x4 MatrixRotationZ(float _Angle)
+	{
+		return DirectX::XMMatrixRotationX(_Angle);
+	}
+
+	// 축에 대한 회전 행렬 생성
+	static float4x4 MatrixRotationAxis(const float4& _Axis, float _Angle)
+	{
+		return DirectX::XMMatrixRotationAxis(_Axis.DirectXVector, _Angle);
+	}
+
+	// 이동 행렬 생성
+	static float4x4 MatrixTranslation(float _OffsetX, float _OffsetY, float _OffsetZ)
+	{
+		return DirectX::XMMatrixTranslation(_OffsetX, _OffsetY, _OffsetZ);
+	}
+
+	// 이동 행렬 생성
+	static float4x4 MatrixTranslation(const float4& _Offset)
+	{
+		return DirectX::XMMatrixTranslationFromVector(_Offset.DirectXVector);
+	}
+
+	// 점전용 transform
+	static float4 TransformFromCoord(const float4& _lhs, const float4x4& _rhs)
+	{
+		const float4 Result{ DirectX::XMVector3TransformCoord(_lhs.DirectXVector, _rhs.DirectXMatrix) };
+		return Result;
+	}
+
+	// 벡터전용 transform
+	static float4 TransformFromNormal(const float4& _lhs, const float4x4& _rhs)
+	{
+		const float4 Result{ DirectX::XMVector3TransformNormal(_lhs.DirectXVector, _rhs.DirectXMatrix) };
+		return Result;
+	}
+
 };
 
 /* 행렬에 대한 덧셈이나, 스칼라 곱은 각 성분별로 계산되어 진다. */
@@ -381,6 +483,29 @@ inline std::ostream& operator<<(std::ostream& _os, const float4x4& _Mat)
 	_os << Str;
 	return _os;
 }
+
+// 벡터 * 행렬 곱
+inline float4 operator*(const float4& _lhs, const float4x4& _rhs)
+{
+	const float4 Result{ DirectX::XMVector4Transform(_lhs.DirectXVector, _rhs.DirectXMatrix) };
+	return Result;
+}
+
+
+//// 점 전용 transform
+//inline float4 operator*(const float4& _lhs, const float4x4& _rhs)
+//{
+//	const float4 Result{ DirectX::XMVector3TransformCoord(_lhs.DirectXVector, _rhs.DirectXMatrix) };
+//	return Result;
+//}
+//
+//
+//// 방향벡터 전용 transform
+//inline float4 operator*(const float4& _lhs, const float4x4& _rhs)
+//{
+//	const float4 Result{ DirectX::XMVector3TransformNormal(_lhs.DirectXVector, _rhs.DirectXMatrix) };
+//	return Result;
+//}
 
 #endif // !__DEFINE_GAME_MATH_H
 

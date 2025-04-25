@@ -13,4 +13,6 @@ int main()
 
 	std::cout << "Determinant Mat" << DirectX::XMMatrixDeterminant(float4x4::Identity().DirectXMatrix) << '\n';
 	std::cout << float4x4::Inverse(float4x4::Identity());
+
+	std::cout << float4::UP * DirectX::XMMatrixRotationAxis(float4::RIGHT.DirectXVector, 90.0f);
 }

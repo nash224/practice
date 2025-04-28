@@ -50,6 +50,7 @@
       <Filter>ThirdParty\inc</Filter>
     </ClInclude>
     <ClInclude Include="Constant.h" />
+    <ClInclude Include="EngineTimer.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -66,6 +67,7 @@
     <ClCompile Include="main.cpp">
       <Filter>main</Filter>
     </ClCompile>
+    <ClCompile Include="EngineTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXProject.rc">

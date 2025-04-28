@@ -1,10 +1,16 @@
 ﻿// DirectXProject.cpp : 애플리케이션에 대한 진입점을 정의합니다.
 //
 
+#pragma once  
+
+#include <crtdbg.h>
+
 #include "framework.h"
-#include "DirectXProject.h"
+#include "Resource.h"
 
 #define MAX_LOADSTRING 100
+
+#include "EngineGraphic.h"
 
 // 전역 변수:
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
@@ -22,6 +28,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ LPWSTR    lpCmdLine,
                      _In_ int       nCmdShow)
 {
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
@@ -104,6 +112,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    {
       return FALSE;
    }
+
+   EngineGraphic* Instance = EngineGraphic::GetInstance();
+   Instance->Initialize(&hWnd);
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);

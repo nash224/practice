@@ -11,6 +11,7 @@
 #pragma comment(lib, "ThirdParty\\lib\\release\\DirectXTex.lib")
 #endif // DEBUG
 
+
 using namespace DirectX;
 
 bool GraphicDevice::CreateDevice()
@@ -37,6 +38,7 @@ bool GraphicDevice::CreateDevice()
 
 	if (FAILED(hr))
 	{
+		MessageBoxAssert(L"D3D11CreateDevice Failed.");
 		MessageBox(0, L"D3D11CreateDevice Failed.", 0, 0);
 		return false;
 	}

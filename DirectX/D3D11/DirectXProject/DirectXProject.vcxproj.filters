@@ -1,42 +1,55 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="소스 파일">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="헤더 파일">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="GraphicDevice">
+      <UniqueIdentifier>{da305551-86bd-43ad-ace0-029b92f422c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{6316778d-d41e-497b-882e-1d2c5a109567}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="main">
+      <UniqueIdentifier>{c3f080a6-926e-42bf-9456-04b1d23b1f57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header">
+      <UniqueIdentifier>{d350e654-7e7b-4c48-b5ca-41227732f459}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty">
+      <UniqueIdentifier>{524f9b7c-0926-48b0-9e63-06010434bd03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\lib">
+      <UniqueIdentifier>{cdbd2e58-8c32-435e-9c7f-2329046a7747}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\inc">
+      <UniqueIdentifier>{82098b97-a4a9-4655-a615-7f6055e722d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="EngineGraphic.h">
+      <Filter>GraphicDevice</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>main</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>main</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXProject.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="TSingleton.h">
+      <Filter>Interface</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="DirectXProject.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="DirectXProject.rc">
-      <Filter>리소스 파일</Filter>
-    </ResourceCompile>
+    <ClInclude Include="Header.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\inc\DirectXTex.h">
+      <Filter>ThirdParty\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="Constant.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -45,5 +58,37 @@
     <Image Include="DirectXProject.ico">
       <Filter>리소스 파일</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="EngineGraphic.cpp">
+      <Filter>GraphicDevice</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DirectXProject.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ThirdParty\inc\DirectXTex.inl">
+      <Filter>ThirdParty\inc</Filter>
+    </None>
+    <None Include="ThirdParty\lib\debug\DirectXTexd.pdb">
+      <Filter>ThirdParty\lib</Filter>
+    </None>
+    <None Include="ThirdParty\lib\release\DirectXTex.pdb">
+      <Filter>ThirdParty\lib</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="ThirdParty\lib\debug\DirectXTexd.lib">
+      <Filter>ThirdParty\lib</Filter>
+    </Library>
+    <Library Include="ThirdParty\lib\release\DirectXTex.lib">
+      <Filter>ThirdParty\lib</Filter>
+    </Library>
   </ItemGroup>
 </Project>

@@ -11,5 +11,6 @@
     <ClCompile Include="ADefaultClass.cpp" />
     <ClCompile Include="CMonster.cpp" />
     <ClCompile Include="CPlayer.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
 </Project>

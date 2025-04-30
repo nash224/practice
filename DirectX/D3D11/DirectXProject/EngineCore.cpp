@@ -71,6 +71,8 @@ void EngineCore::Start()
 void EngineCore::Update()
 {
 	mTimer->Tick(); 
+
+	CalculateFrameStats();
 }
 
 void EngineCore::Release()

@@ -17,6 +17,7 @@
 #include "Constant.h"
 
 #include "EngineWindow.h"
+#include "EngineCore.h"
 
 static constexpr int BackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 
@@ -124,6 +125,7 @@ bool EngineGraphic::Init(HWND _pHandle)
 	HR(dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxgiFactory));
 
 	HR(dxgiFactory->CreateSwapChain(md3dDevice, &SwapDesc, &mSwapChain));
+	HR(dxgiFactory->MakeWindowAssociation(_pHandle, DXGI_MWA_NO_ALT_ENTER));
 
 	// 사용을 끝낸 COM 객체는 정리한다. (내부 참조 카운터 감소)
 	ReleaseCOM(dxgiDevice);
@@ -195,10 +197,18 @@ void EngineGraphic::OnResize()
 
 	// 뷰포트도 병합기에 바인딩
 
-	mViewPort.TopLeftX = static_cast<float>(engine::window::WinPos::XPos);
-	mViewPort.TopLeftY = static_cast<float>(engine::window::WinPos::YPos);
-	mViewPort.Width = static_cast<float>(engine::window::WinSize::Width);
-	mViewPort.Height = static_cast<float>(engine::window::WinSize::Height);
+	const WinSize& WinScale = EngineCore::GetWindowSize();
+	const WinPos& WinPos = EngineCore::GetWindowPos();
+
+	mViewPort.TopLeftX = static_cast<float>(WinPos.X);
+	mViewPort.TopLeftY = static_cast<float>(WinPos.Y);
+	mViewPort.Width    = static_cast<float>(WinScale.Width);
+	mViewPort.Height   = static_cast<float>(WinScale.Height);
+
+	mViewPort.TopLeftX = 100.0f;
+	mViewPort.TopLeftY = 100.0f;
+	mViewPort.Width    = 500.0f;
+	mViewPort.Height   = 400.0f;
 	mViewPort.MinDepth = 0.0f;
 	mViewPort.MaxDepth = 1.0f;
 

@@ -11,6 +11,7 @@
 #include <windows.h>
 #include <string>
 #include "TSingleton.h"
+#include "EngineWindow.h"
 
 class EngineWindow;
 class EngineGraphic;
@@ -18,6 +19,16 @@ class EngineTimer;
 
 class EngineCore : public TSingleton<EngineCore>
 {
+public:
+	static const WinSize& GetWindowSize()
+	{
+		return GetInstance()->mWindow->GetWindowSize();
+	}
+	static const WinPos& GetWindowPos()
+	{
+		return GetInstance()->mWindow->GetWindowPos();
+	}
+
 public:
 	static void EngineStart(HINSTANCE _hInst);
 

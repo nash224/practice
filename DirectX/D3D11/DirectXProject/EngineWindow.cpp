@@ -328,7 +328,14 @@ int EngineWindow::Run(HINSTANCE _hInst,
         }
         else
         {
-			_CoreUpdate();
+			if (false == mAppPaused)
+			{
+				_CoreUpdate();
+			}
+			else
+			{
+				Sleep(100);
+			}
         }
     }
 

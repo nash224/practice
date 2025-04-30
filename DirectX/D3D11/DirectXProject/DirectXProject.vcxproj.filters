@@ -14,9 +14,6 @@
     <Filter Include="main">
       <UniqueIdentifier>{c3f080a6-926e-42bf-9456-04b1d23b1f57}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header">
-      <UniqueIdentifier>{d350e654-7e7b-4c48-b5ca-41227732f459}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ThirdParty">
       <UniqueIdentifier>{524f9b7c-0926-48b0-9e63-06010434bd03}</UniqueIdentifier>
     </Filter>
@@ -25,6 +22,15 @@
     </Filter>
     <Filter Include="ThirdParty\inc">
       <UniqueIdentifier>{82098b97-a4a9-4655-a615-7f6055e722d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{ce841806-4af7-4068-a6fa-a7a34437a557}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Global">
+      <UniqueIdentifier>{d350e654-7e7b-4c48-b5ca-41227732f459}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{8d937d5f-bbed-404c-b021-7324daa3802c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -44,13 +50,24 @@
       <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="Header.h">
-      <Filter>Header</Filter>
+      <Filter>Global</Filter>
     </ClInclude>
     <ClInclude Include="ThirdParty\inc\DirectXTex.h">
       <Filter>ThirdParty\inc</Filter>
     </ClInclude>
-    <ClInclude Include="Constant.h" />
     <ClInclude Include="EngineTimer.h" />
+    <ClInclude Include="EngineWindow.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Constant.h">
+      <Filter>Global</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DUtil.h">
+      <Filter>GraphicDevice</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineCore.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico">
@@ -68,6 +85,15 @@
       <Filter>main</Filter>
     </ClCompile>
     <ClCompile Include="EngineTimer.cpp" />
+    <ClCompile Include="EngineWindow.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DUtil.cpp">
+      <Filter>GraphicDevice</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineCore.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectXProject.rc">

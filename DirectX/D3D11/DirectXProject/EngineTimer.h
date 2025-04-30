@@ -18,29 +18,16 @@ public:
 	EngineTimer& operator=(const EngineTimer& _Other) = delete;
 	EngineTimer& operator=(EngineTimer&& _Other) = delete;
 
-	// 흐른 시간을 반환합니다.
-	float GetDeltaTime() const
-	{
-		return mDeltaTime;
-	}
+	inline float GetDeltaTime() const { return mDeltaTime; }
+	inline double GetDoubleTime() const { return mDoubleTime; }
 
-	// 흐른 시간을 반환합니다.
-	double GetDoubleTime() const
-	{
-		return mDoubleTime;
-	}
-
-	// 멈췄던 시간을 제외한, 진행했던 시간
+	// 실행했던 시간을 반환한다.
 	float TotalTime() const;
 
-	// 시간 리셋
-	void Reset();
-	// 시간 측정 시작
-	void Start();
-	// 시간 정지
-	void Stop();
-	// 시간 업데이트
-	void Tick();
+	void Reset(); // 게임 루프 이전에 호출
+	void Start(); // 시간을 다시 재생시킨다.
+	void Stop();  // 시간을 멈춘다.
+	void Tick();  // 매 프레임마다 업데이트를 수행한다.
 
 private:
 	time_type mBaseTime   = 0; // 리셋 이후로부터, 진행한 시간

@@ -95,6 +95,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -125,6 +126,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -150,11 +152,23 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Constant.h" />
+    <ClInclude Include="D3DUtil.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="EngineCore.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="EngineGraphic.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="EngineTimer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="EngineWindow.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -169,11 +183,23 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="D3DUtil.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="EngineCore.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="EngineGraphic.cpp">
       <SubType>
       </SubType>
     </ClCompile>
     <ClCompile Include="EngineTimer.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="EngineWindow.cpp">
       <SubType>
       </SubType>
     </ClCompile>

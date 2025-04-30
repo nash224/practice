@@ -13,11 +13,26 @@
 
 #include <cassert>
 #include "Header.h"
+#include "D3DUtil.h"
 #include "Constant.h"
+
+#include "EngineWindow.h"
+
+static constexpr int BackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 
 using namespace DirectX;
 
-bool EngineGraphic::Initialize(HWND* _pHandle)
+EngineGraphic::EngineGraphic()
+{
+	ZeroMemory(&mViewPort, sizeof(D3D11_VIEWPORT));
+}
+
+EngineGraphic::~EngineGraphic()
+{
+	Release();
+}
+
+bool EngineGraphic::Init(HWND _pHandle)
 {
 	UINT createDeviceFlags = 0;
 
@@ -26,8 +41,6 @@ bool EngineGraphic::Initialize(HWND* _pHandle)
 #endif
 
 	D3D_FEATURE_LEVEL featureLevel;
-	ID3D11Device* md3dDevice;
-	ID3D11DeviceContext* md3dImmediateContext;
 
 	// D3D 디바이스 초기화
 	HRESULT hr = D3D11CreateDevice(
@@ -56,17 +69,15 @@ bool EngineGraphic::Initialize(HWND* _pHandle)
 	}
 
 	// MSAA 지원 검사
-	UINT m4xMsaaQuality;
-	md3dDevice->CheckMultisampleQualityLevels(
+	HR(md3dDevice->CheckMultisampleQualityLevels(
 			DXGI_FORMAT_R8G8B8A8_UNORM,
-			4, &m4xMsaaQuality);
+			4, &m4xMsaaQuality));
 
-	assert(0 < m4xMsaaQuality);
-	const bool mEnable4xMsaa = 0 < m4xMsaaQuality;
+	mEnable4xMsaa = (0 < m4xMsaaQuality);
 
-	// 스왑체인 특성 정의
+	// 스왑체인 서술
 	DXGI_SWAP_CHAIN_DESC SwapDesc = {};
-	// 백버퍼의 속성을 BufferDesc에 서술
+	// 백버퍼 서술
 	SwapDesc.BufferDesc.Width                   = engine::window::WinSize::Width;	    // 화면의 넓이
 	SwapDesc.BufferDesc.Height                  = engine::window::WinSize::Height;      // 화면의 높이
 	SwapDesc.BufferDesc.RefreshRate.Numerator   = 60;                                   // 디스플레이 갱신율
@@ -75,6 +86,7 @@ bool EngineGraphic::Initialize(HWND* _pHandle)
 	SwapDesc.BufferDesc.ScanlineOrdering        = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED; // 모름
 	SwapDesc.BufferDesc.Scaling                 = DXGI_MODE_SCALING_UNSPECIFIED;        // 화면 크기 변환 시, 스케일 모드 지정
 
+	// Enable 4x MSAA?
 	if (mEnable4xMsaa)
 	{
 		SwapDesc.SampleDesc.Count   = 4;					// 샘플링 개수
@@ -88,7 +100,7 @@ bool EngineGraphic::Initialize(HWND* _pHandle)
 
 	SwapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;	// 버퍼의 용도, 백버퍼를 렌더링에 사용할 것이다.
 	SwapDesc.BufferCount = 1;	                            // 백버퍼 수 1개 -> 더블 버퍼링,  2개 -> 삼중 버퍼링
-	SwapDesc.OutputWindow = (*_pHandle);                    // 출력할 화면
+	SwapDesc.OutputWindow = (_pHandle);                     // 출력할 화면
 	SwapDesc.Windowed    = true;                            // 창 모드 유무, false -> 전체화면 모드
 	SwapDesc.SwapEffect  = DXGI_SWAP_EFFECT_DISCARD;        // buffer가 교체되는 방법 지정, 
 													        // discard로 초기화할 경우, 가장 성능 좋은 것으로 지정
@@ -100,48 +112,64 @@ bool EngineGraphic::Initialize(HWND* _pHandle)
 	// 
 	// 스왑체인 객체를 얻기 위해, 차례대로 COM의 질의를 거친다.
 	IDXGIDevice* dxgiDevice = 0;
-	assert(S_OK == md3dDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice));
+	HR(md3dDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice));
 
 	// 어뎁터는 컴퓨터의 하드웨어 및 소프트웨어를 추상화한 객체
 	// 내부에 GPU, 메모리 등을 포함하는 디스플레이 서브 시스템의 정보를 들고 있다.
 	IDXGIAdapter* dxgiAdapter = 0;
-	assert(S_OK == dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&dxgiAdapter));
+	HR(dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&dxgiAdapter));
 
 	// 펙토리는 dxgi 객체를 생성하는 메서드를 포함한다.
 	IDXGIFactory* dxgiFactory = 0;
-	assert(S_OK == dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxgiFactory));
+	HR(dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxgiFactory));
 
-	IDXGISwapChain* mSwapChain;
-	assert(S_OK == dxgiFactory->CreateSwapChain(md3dDevice, &SwapDesc, &mSwapChain));
+	HR(dxgiFactory->CreateSwapChain(md3dDevice, &SwapDesc, &mSwapChain));
 
 	// 사용을 끝낸 COM 객체는 정리한다. (내부 참조 카운터 감소)
-	dxgiDevice->Release();
-	dxgiAdapter->Release();
-	dxgiFactory->Release();
+	ReleaseCOM(dxgiDevice);
+	ReleaseCOM(dxgiAdapter);
+	ReleaseCOM(dxgiFactory);
 
+	OnResize();
+
+	return true;
+}
+
+void EngineGraphic::OnResize()
+{
+	assert(md3dImmediateContext);
+	assert(md3dDevice);
+	assert(mSwapChain);
+
+	ReleaseCOM(mDepthStencilBuffer);
+	ReleaseCOM(mDepthStencilView);
+	ReleaseCOM(mRTV);
+
+	const WinSize& Size = EngineWindow::GetWindowSize();
+	HR(mSwapChain->ResizeBuffers(1, Size.Width, Size.Height, DXGI_FORMAT_R8G8B8A8_UNORM, 0))
 
 	// 렌더타겟뷰는 이미지 버퍼를 수정할 수 있는 권한
 	// 렌더타켓뷰 생성하고 병합기에 바인딩
-	ID3D11RenderTargetView* mRTV;
-	ID3D11Texture2D* backBuffer = 0;
+	ID3D11Texture2D* backBuffer = nullptr;
 
 	// 스왑체인에 존재하는 백버퍼를 가져온다.
-	assert(S_OK	== mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer)));
+	HR(mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer)));
+	assert(backBuffer);
 	// 버퍼에서 RTV 생성
-	md3dDevice->CreateRenderTargetView(backBuffer, 0, &mRTV);
+	HR(md3dDevice->CreateRenderTargetView(backBuffer, 0, &mRTV));
 
 	// 버퍼의 참조카운터 반환
-	backBuffer->Release();
+	ReleaseCOM(backBuffer);
 
-
+	// 깊이-스텐실 버퍼 서술
 	D3D11_TEXTURE2D_DESC depthStencilDesc = {};
-	depthStencilDesc.Width                = engine::window::WinSize::Width; // 깊이 버퍼도 화면의 크기만큼 설정
-	depthStencilDesc.Height               = engine::window::WinSize::Height; 
-	depthStencilDesc.MipLevels            = 1;                              // 밉레벨은 렌더링 속도를 향상시키기 위해 
-			                                                                //미리 축소된 텍스처를 배열로 저장하고, 
-			                                                                // 거리에 따라 축소된 텍스처를 사용하는 기법
-	depthStencilDesc.ArraySize            = 1;
-	depthStencilDesc.Format               = DXGI_FORMAT_D24_UNORM_S8_UINT;  // 텍셀의 형식
+	depthStencilDesc.Width = engine::window::WinSize::Width; // 깊이 버퍼도 화면의 크기만큼 설정
+	depthStencilDesc.Height = engine::window::WinSize::Height;
+	depthStencilDesc.MipLevels = 1;                              // 밉레벨은 렌더링 속도를 향상시키기 위해 
+	//미리 축소된 텍스처를 배열로 저장하고, 
+	// 거리에 따라 축소된 텍스처를 사용하는 기법
+	depthStencilDesc.ArraySize = 1;
+	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;  // 텍셀의 형식
 
 	if (mEnable4xMsaa)
 	{
@@ -154,43 +182,41 @@ bool EngineGraphic::Initialize(HWND* _pHandle)
 		depthStencilDesc.SampleDesc.Quality = 0;
 	}
 
-	depthStencilDesc.Usage          = D3D11_USAGE_DEFAULT;      // 텍스처를 gpu에서만 읽기/쓰기 수행, 디폴트 값
-	depthStencilDesc.BindFlags      = D3D11_BIND_DEPTH_STENCIL; // 버퍼에 stencil을 포함하겠다.
+	depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;      // 텍스처를 gpu에서만 읽기/쓰기 수행, 디폴트 값
+	depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL; // 버퍼에 stencil을 포함하겠다.
 	depthStencilDesc.CPUAccessFlags = 0;                        // cpu 접근 허용 x
-	depthStencilDesc.MiscFlags      = 0; 
+	depthStencilDesc.MiscFlags = 0;
 
-	ID3D11Texture2D* mDepthStencilBuffer;
-	// 깊이-스탠실을 수정할 권한
-	ID3D11DepthStencilView* mDepthStencilView;
-
-	assert(S_OK == md3dDevice->CreateTexture2D(&depthStencilDesc, 0, &mDepthStencilBuffer));
-	assert(S_OK == md3dDevice->CreateDepthStencilView(mDepthStencilBuffer, 0, &mDepthStencilView));
-
+	HR(md3dDevice->CreateTexture2D(&depthStencilDesc, 0, &mDepthStencilBuffer));
+	HR(md3dDevice->CreateDepthStencilView(mDepthStencilBuffer, 0, &mDepthStencilView));
 
 	// 병합기에 RTV 바인딩
 	md3dImmediateContext->OMSetRenderTargets(1, &mRTV, mDepthStencilView);
 
 	// 뷰포트도 병합기에 바인딩
-	D3D11_VIEWPORT vp = {};
-	vp.TopLeftX = static_cast<float>(engine::window::WinPos::XPos);
-	vp.TopLeftY = static_cast<float>(engine::window::WinPos::YPos);
-	vp.Width = static_cast<float>(engine::window::WinSize::Width);
-	vp.Height = static_cast<float>(engine::window::WinSize::Height);
-	vp.MinDepth = 0.0f;
-	vp.MaxDepth = 1.0f;
 
-	md3dImmediateContext->RSSetViewports(1, &vp);
+	mViewPort.TopLeftX = static_cast<float>(engine::window::WinPos::XPos);
+	mViewPort.TopLeftY = static_cast<float>(engine::window::WinPos::YPos);
+	mViewPort.Width = static_cast<float>(engine::window::WinSize::Width);
+	mViewPort.Height = static_cast<float>(engine::window::WinSize::Height);
+	mViewPort.MinDepth = 0.0f;
+	mViewPort.MaxDepth = 1.0f;
 
-	md3dDevice->Release();
-	md3dImmediateContext->Release();
-	mSwapChain->Release();
-	mRTV->Release();
-	mDepthStencilBuffer->Release();
-	mDepthStencilView->Release();
-
-	return true;
+	md3dImmediateContext->RSSetViewports(1, &mViewPort);
 }
+
 
 void EngineGraphic::Release()
 {
+	ReleaseCOM(mSwapChain);
+	ReleaseCOM(mRTV);
+	ReleaseCOM(mDepthStencilBuffer);
+	ReleaseCOM(mDepthStencilView);
+
+	if (nullptr != md3dImmediateContext)
+	{
+		md3dImmediateContext->ClearState();
+	}
+	ReleaseCOM(md3dImmediateContext);
+	ReleaseCOM(md3dDevice);
 }

@@ -10,6 +10,28 @@ EngineTimer::EngineTimer()
 	mSecondsPerCount = 1.0 / (double)countsPerSec;
 }
 
+float EngineTimer::TotalTime() const
+{
+	// 일시 정지했던 시간은 제외하고 흐른시간을 반환한다.
+	// 
+	//                  |<-일시정지 시간 ->|
+	// -----*-----------*-----------------*-------------*--------------> t
+	// mBaseTime	mStopTime		  mStartTime	 mCurTime
+
+	time_type TotalTime = 0;
+	if (true == mStopped)
+	{
+		TotalTime = (mStopTime - mPausedTime - mBaseTime) * mSecondsPerCount;
+	}
+	else
+	{
+		TotalTime = (mCurTime - mPausedTime - mBaseTime) * mSecondsPerCount;
+	}
+
+	return static_cast<float>(TotalTime);
+}
+
+
 void EngineTimer::Reset()
 {
 	time_type CurTime = 0;
@@ -74,25 +96,4 @@ void EngineTimer::Tick()
 
 	// 진행 시간이 음수가 되는걸 방지한다.
 	mDeltaTime = (mDeltaTime < 0) ? 0.0f : mDeltaTime;
-}
-
-float EngineTimer::TotalTime() const
-{
-	// 일시 정지했던 시간은 제외하고 흐른시간을 반환한다.
-	// 
-	//                  |<-일시정지 시간 ->|
-	// -----*-----------*-----------------*-------------*--------------> t
-	// mBaseTime	mStopTime		  mStartTime	 mCurTime
-
-	time_type TotalTime = 0;
-	if (true == mStopped)
-	{
-		TotalTime = (mStopTime - mPausedTime - mBaseTime) * mSecondsPerCount;
-	}
-	else
-	{
-		TotalTime = (mCurTime - mPausedTime - mBaseTime) * mSecondsPerCount;
-	}
-
-	return static_cast<float>(TotalTime);
 }

@@ -20,7 +20,7 @@ public:
 
 		if (nullptr == s_Instance)
 		{
-			s_Instance = new TSingleton<ObjectType>;
+			s_Instance = new ObjectType;
 			atexit(TSingleton::DestroyInstance);
 		}
 

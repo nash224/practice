@@ -4,6 +4,8 @@
 
 #include "systemclass.h"
 
+#include <string>
+
 SystemClass::SystemClass()
 {
 	// 안전한 소멸을 위해 멤버 포인터를 nullptr로 초기화
@@ -11,6 +13,8 @@ SystemClass::SystemClass()
 	m_applicationName = 0;
 	m_hinstance = 0;
 	m_hwnd = 0;
+
+	m_Input = 0;
 }
 
 SystemClass::~SystemClass()
@@ -34,7 +38,8 @@ bool SystemClass::Initialize()
 	InitializeWindows(screenWidth, screenHeight);
 
 	// 입력 객체 생성 및 초기화
-	// InputClass
+	m_Input = new InputClass;
+	m_Input->Initialize();
 
 	// 입력 객체 생성 및 초기화
 	// ApplictaionClass
@@ -48,6 +53,11 @@ void SystemClass::Shutdown()
 	// 어플리케이션 객체 정리
 	
 	// 입력 객체 정리
+	if (m_Input)
+	{
+		delete m_Input;
+		m_Input = 0;
+	}
 
 	// 메인화면 종료 및 핸들 반환
 	ShutdownWindows();
@@ -92,8 +102,33 @@ void SystemClass::Run()
 	return;
 }
 
-LRESULT SystemClass::MessageHandler(HWND, UINT, WPARAM, LPARAM)
+LRESULT SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
+	switch (umsg)
+	{
+	case WM_KEYDOWN:
+	{
+		m_Input->KeyDown((unsigned int) wparam);
+		static std::wstring output;
+		output.clear();
+
+		std::string input = std::to_string((unsigned int)wparam);
+		output.assign(input.begin(), input.end());
+		output += L"Key has been pressed.\n";
+		OutputDebugString(output.c_str());
+		return 0;
+	}
+	case WM_KEYUP:
+	{
+		m_Input->KeyUp((unsigned int) wparam);
+		return 0;
+	}
+	default:
+	{
+		// 다른 메세지들은 사용하지 않겠다고 시스템에 알리낟.
+		return DefWindowProc(hwnd, umsg, wparam, lparam);
+	}
+	}
 	return LRESULT();
 }
 
@@ -102,9 +137,9 @@ bool SystemClass::Frame()
 	bool result = true;
 
 	// 입력처리
-	if (true)
+	if (m_Input->IsKeyDown(VK_ESCAPE))
 	{
-
+		return false;
 	}
 
 	// 어플리케이션 게임 로직 루프

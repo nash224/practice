@@ -9,10 +9,12 @@
   <ItemGroup>
     <ClInclude Include="systemclass.h" />
     <ClInclude Include="applicationclass.h" />
+    <ClInclude Include="inputclass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="systemclass.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="applicationclass.cpp" />
+    <ClCompile Include="inputclass.cpp" />
   </ItemGroup>
 </Project>

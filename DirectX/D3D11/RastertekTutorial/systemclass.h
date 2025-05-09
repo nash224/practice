@@ -26,6 +26,7 @@
 #include <windows.h>
 
 #include "applicationclass.h"
+#include "inputclass.h"
 
 //---------------------------------------------------------------------------------------
 // Class name: SystemClass
@@ -70,6 +71,8 @@ private:
 	LPCWSTR m_applicationName;
 	HINSTANCE m_hinstance;
 	HWND m_hwnd;
+
+	InputClass* m_Input; // 입력 관리자
 
 };
 

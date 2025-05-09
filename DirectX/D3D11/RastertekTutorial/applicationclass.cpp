@@ -21,7 +21,7 @@ bool ApplicationClass::Initialize(int, int, HWND)
 
 void ApplicationClass::Shutdown()
 {
-
+	int a = 0;
 }
 
 bool ApplicationClass::Frame()

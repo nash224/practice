@@ -73,6 +73,7 @@ private:
 	HWND m_hwnd;
 
 	InputClass* m_Input; // 입력 관리자
+	ApplicationClass* m_Application; // 게임 루프 관리
 
 };
 

@@ -36,7 +36,19 @@ public:
 	ApplicationClass();
 	~ApplicationClass();
 
-	bool Initialize(int, int, HWND);
+
+	/**
+	 * @brief		Initialize	어플리케이션 초기화 함수
+	 *
+	 * @param		screenWidth		화면 가로 크기
+	 * @param		screenHieght	화면 세로 크기
+	 * @param		hwnd			메인화면 핸들
+	 *
+	 * @return		bool		정상적으로 초기화했다면 true
+	 *
+	 * @warning		null
+	 */
+	bool Initialize(int screenWidth, int screenHieght, HWND hwnd);
 	void Shutdown();
 	bool Frame();
 

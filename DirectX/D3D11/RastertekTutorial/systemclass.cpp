@@ -41,16 +41,23 @@ bool SystemClass::Initialize()
 	m_Input = new InputClass;
 	m_Input->Initialize();
 
-	// 입력 객체 생성 및 초기화
+	// 게임 루프 객체 생성 및 초기화
 	// ApplictaionClass
+	m_Application = new ApplicationClass;
+	result = m_Application->Initialize(screenWidth, screenHeight, m_hwnd);
 
-	result = true;
 	return result;
 }
 
 void SystemClass::Shutdown()
 {
 	// 어플리케이션 객체 정리
+	if (m_Application)
+	{
+		m_Application->Shutdown();
+		delete m_Application;
+		m_Application = 0;
+	}
 	
 	// 입력 객체 정리
 	if (m_Input)
@@ -98,7 +105,7 @@ void SystemClass::Run()
 			}
 		}
 	}
-
+	
 	return;
 }
 
@@ -143,9 +150,10 @@ bool SystemClass::Frame()
 	}
 
 	// 어플리케이션 게임 로직 루프
-	if (true)
+	result = m_Application->Frame();
+	if (!result)
 	{
-
+		return false;
 	}
 
 	return result;

@@ -65,6 +65,9 @@ public:
 					bool fullscreen, float screenDepth, float screenNear);
 	void Shutdown();
 
+	void BeginScene(float red, float green, float blue, float alpha);
+	void EndScene();
+
 protected:
 
 private:

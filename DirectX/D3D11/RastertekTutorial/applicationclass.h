@@ -67,6 +67,12 @@ public:
 	bool Frame();
 
 private:
+
+	/**
+	 * @brief		Render		화면에 물체를 그린다
+	 *
+	 * @return		bool		렌더링 중에 발생한 오류 유무
+	 */
 	bool Render();
 
 private:

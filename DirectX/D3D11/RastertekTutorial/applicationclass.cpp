@@ -42,5 +42,22 @@ void ApplicationClass::Shutdown()
 
 bool ApplicationClass::Frame()
 {
+	bool result;
+
+	result = Render();
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool ApplicationClass::Render()
+{
+	m_Direct3D->BeginScene(0.5f, 0.5f, 0.5f, 1.0f);
+
+	m_Direct3D->EndScene();
+
 	return true;
 }

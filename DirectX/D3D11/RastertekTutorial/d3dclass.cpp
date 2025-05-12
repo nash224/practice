@@ -362,5 +362,85 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 
 void D3DClass::Shutdown()
 {
-	int a = 0;
+	// 전체모드로 스왑체인을 제거하면 예외가 발생할 것이다.
+	// 스왑체인을 반환하기 전에 창모드로 변환해야 한다.
+	if (m_swapChain)
+	{
+		m_swapChain->SetFullscreenState(false, NULL);
+	}
+
+	if (m_rasterState)
+	{
+		m_rasterState->Release();
+		m_rasterState = 0;
+	}
+
+	if (m_depthStencilView)
+	{
+		m_depthStencilView->Release();
+		m_depthStencilView = 0;
+	}
+
+	if (m_depthStencilState)
+	{
+		m_depthStencilState->Release();
+		m_depthStencilState = 0;
+	}
+
+	if (m_depthStencilBuffer)
+	{
+		m_depthStencilBuffer->Release();
+		m_depthStencilBuffer = 0;
+	}
+
+	if (m_deviceContext)
+	{
+		m_deviceContext->Release();
+		m_deviceContext = 0;
+	}
+
+	if (m_device)
+	{
+		m_device->Release();
+		m_device = 0;
+	}
+
+	if (m_swapChain)
+	{
+		m_swapChain->Release();
+		m_swapChain = 0;
+	}
+
+}
+
+void D3DClass::BeginScene(float red, float green, float blue, float alpha)
+{
+	float color[4] = {};
+
+	color[0] = red;
+	color[1] = green;
+	color[2] = blue;
+	color[3] = alpha;
+	
+	// 아래와 같이 view 객체로 자원을 수정한다.
+
+	// clear the back buffer.
+	m_deviceContext->ClearRenderTargetView(m_renderTargetView, color);
+
+	// clear the depth-stencil buffer.
+	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.f, 0);
+}
+
+void D3DClass::EndScene()
+{
+	if (m_vsync_enabled)
+	{
+		// Lock
+		m_swapChain->Present(1, 0);
+	}
+	else
+	{
+		// 바로 출력
+		m_swapChain->Present(0, 0);
+	}
 }

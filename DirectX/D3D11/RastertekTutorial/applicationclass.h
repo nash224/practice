@@ -13,6 +13,8 @@
 //---------------------------------------------------------------------------------------
 
 #include <windows.h>
+#include "d3dclass.h"
+
 
 //---------------------------------------------------------------------------------------
 // GLOBALS
@@ -49,12 +51,26 @@ public:
 	 * @warning		null
 	 */
 	bool Initialize(int screenWidth, int screenHieght, HWND hwnd);
+
+	/**
+	 * @brief		Shutdown	어플리케이션을 정리한다.
+	 *
+	 * @return		void
+	 */
 	void Shutdown();
+
+	/**
+	 * @brief		Frame		월드에 존재하는 오브젝트의 상태를 갱신한다.
+	 *
+	 * @return		void
+	 */
 	bool Frame();
 
 private:
 	bool Render();
 
+private:
+	D3DClass* m_Direct3D; // 렌더링을 위한 d3d 객체
 };
 
 #endif // !__DEFINE_APLLICATIONCLASS_H_

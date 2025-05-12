@@ -131,6 +131,10 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="d3dclass.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="inputclass.h">
       <SubType>
       </SubType>
@@ -142,6 +146,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="applicationclass.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="d3dclass.cpp">
       <SubType>
       </SubType>
     </ClCompile>

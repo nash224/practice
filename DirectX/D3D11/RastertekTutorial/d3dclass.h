@@ -65,7 +65,27 @@ public:
 					bool fullscreen, float screenDepth, float screenNear);
 	void Shutdown();
 
+
+	/**
+	 * @brief		BeginScene		백버퍼와 깊이버퍼를 초기화한다.
+	 *
+	 * @param		float	red		적색 픽셀
+	 * @param		float	green	녹색 픽셀
+	 * @param		float	blue	청색 픽셀
+	 * @param		float	alpha	투명도
+	 *
+	 * @return		void
+	 */
 	void BeginScene(float red, float green, float blue, float alpha);
+
+
+	/**
+	 * @brief		EndScene		그려진 버퍼를 화면에 출력한다.
+	 *
+	 * @return		void
+	 *
+	 * @warning		null
+	 */
 	void EndScene();
 
 protected:
